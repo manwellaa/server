@@ -6,4 +6,58 @@
 		<RootNamespace>Bit.$(MSBuildProjectName)</RootNamespace>
 	</PropertyGroup>
 
+	<!---->
+	<PropertyGroup Label="Define Versions">
+		<!--
+			NuGet Package: https://www.nuget.org/packages/NewRelic.Agent/
+			Source Repo: https://github.com/newrelic/newrelic-dotnet-agent
+			Used In: Admin, Api, Billing, Events, Identity
+		-->
+		<NewRelicAgentVersion>8.41.0</NewRelicAgentVersion>
+		<!--
+			NuGet Package: https://www.nuget.org/packages/Microsoft.VisualStudio.Web.CodeGeneration
+			Source Repo: https://github.com/dotnet/Scaffolding
+			Used In: Admin, Billing
+		-->
+		<MicrosoftVisualStudioWebCodeGenerationDesignVersion>5.0.2</MicrosoftVisualStudioWebCodeGenerationDesignVersion>
+		<!--
+			For the most part everything in the https://github.com/dotnet/aspnetcore
+			repo has the same exact release cadence. Any of the packages on that cadence can
+			this property to manage their version. Most of those packages follow the 
+			Microsoft.AspNetCore.* naming convention.
+
+			Examples:
+			Microsoft.AspNetCore.SignalR.Protocols.MessagePack - Notifications
+			Microsoft.AspNetCore.SignalR.StackExchangeRedis - Notifications
+			Microsoft.AspNetCore.Mvc.NewtonsoftJson - Api
+			Microsoft.AspNetCore.Authentication.JwtBearer - Core
+		-->
+		<AspNetCorePackagesVersion>5.0.9</AspNetCorePackagesVersion>
+		<!--
+			For the most part everything in the https://github.com/dotnet/efcore
+			repo has the same exact release cadence. Any of the packages on that cadence can
+			this property to manage their version. Most of those packages follow the 
+			Microsoft.EntityFrameworkCore.* naming convention.
+			
+			Examples:
+
+		-->
+		<EntityFrameworkCorePackagesVersion>5.0.9</EntityFrameworkCorePackagesVersion>
+		<MicrosoftNetTestSdkVersion>16.7.1</MicrosoftNetTestSdkVersion>
+		<XUnitVersion>2.4.1</XUnitVersion>
+		<XUnitRunnerVisualStudioVersion>2.4.3</XUnitRunnerVisualStudioVersion>
+		<CoverletCollectorVersion>3.0.3</CoverletCollectorVersion>
+		<MoqVersion>4.16.1</MoqVersion>
+		<NSubstituteVersion>4.2.2</NSubstituteVersion>
+		<AutoFixtureXunit2Version>4.14.0</AutoFixtureXunit2Version>
+		<AutoFixtureAutoNSubstituteVersion>4.14.0</AutoFixtureAutoNSubstituteVersion>
+	</PropertyGroup>
+
+	<!-- Set unit test project specific properties-->
+	<PropertyGroup Condition="$(MSBuildProjectName.EndsWith('.Test'))">
+		<!-- The below condition allows a project to override this property without MSBuild overwriting it with true -->
+		<IsUnitTestProject Condition="'$(IsUnitTestProject)' == ''">true</IsUnitTestProject>
+	</PropertyGroup>
+
+
 </Project>
