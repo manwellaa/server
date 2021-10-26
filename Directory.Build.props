@@ -43,19 +43,62 @@
 
 		-->
 		<EntityFrameworkCorePackagesVersion>5.0.9</EntityFrameworkCorePackagesVersion>
+		<!--
+			NuGet Package: https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/
+			Source Repo: https://github.com/microsoft/vstest
+			Used In: All test projects
+		-->
 		<MicrosoftNetTestSdkVersion>16.7.1</MicrosoftNetTestSdkVersion>
+		<!--
+			NuGet Package: https://www.nuget.org/packages/xunit/
+			Source Repo: https://github.com/xunit/xunit
+			Used In: All test projects
+		-->
 		<XUnitVersion>2.4.1</XUnitVersion>
+		<!--
+			NuGet Package: https://www.nuget.org/packages/xunit.runner.visualstudio/
+			Source Repo: https://github.com/xunit/visualstudio.xunit
+			Used In: All test projects
+		-->
 		<XUnitRunnerVisualStudioVersion>2.4.3</XUnitRunnerVisualStudioVersion>
+		<!--
+			NuGet Package: https://www.nuget.org/packages/coverlet.collector/
+			Source Repo: https://github.com/coverlet-coverage/coverlet
+			Used In: All test projects
+		-->
 		<CoverletCollectorVersion>3.0.3</CoverletCollectorVersion>
+		<!--
+			NuGet Package: https://www.nuget.org/packages/Moq/
+			Source Repo: https://github.com/moq/moq4
+			Used In: Core.Test
+		-->
 		<MoqVersion>4.16.1</MoqVersion>
+		<!--
+			NuGet Package: https://www.nuget.org/packages/NSubstitute/
+			Source Repo: https://github.com/nsubstitute/NSubstitute
+			Used In: Api.Test, Core.Test, Icons.Test
+		-->
 		<NSubstituteVersion>4.2.2</NSubstituteVersion>
+		<!--
+			NuGet Package: https://www.nuget.org/packages/AutoFixture.Xunit2/
+			Source Repo: https://github.com/AutoFixture/AutoFixture
+			Used In: Api.Test, Core.Test
+		-->
 		<AutoFixtureXunit2Version>4.14.0</AutoFixtureXunit2Version>
+		<!--
+			NuGet Package: https://www.nuget.org/packages/AutoFixture.AutoNSubstitute/
+			Source Repo: https://github.com/AutoFixture/AutoFixture
+			Used In: Core.Test
+		-->
 		<AutoFixtureAutoNSubstituteVersion>4.14.0</AutoFixtureAutoNSubstituteVersion>
 	</PropertyGroup>
 
 	<!-- Set unit test project specific properties-->
 	<PropertyGroup Condition="$(MSBuildProjectName.EndsWith('.Test'))">
-		<!-- The below condition allows a project to override this property without MSBuild overwriting it with true -->
+		<!-- 
+			The below condition allows a project to override this property without MSBuild overwriting it with true.
+			This would be for projects that end in .Test but are not unit test projects.
+		-->
 		<IsUnitTestProject Condition="'$(IsUnitTestProject)' == ''">true</IsUnitTestProject>
 	</PropertyGroup>
 
