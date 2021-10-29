@@ -100,6 +100,8 @@
 			This would be for projects that end in .Test but are not unit test projects.
 		-->
 		<IsUnitTestProject Condition="'$(IsUnitTestProject)' == ''">true</IsUnitTestProject>
+		<!-- Test methods don't need to end in Async even if they are async -->
+		<NoWarn>$(NoWarn);IDE1006</NoWarn>
 	</PropertyGroup>
 
 
