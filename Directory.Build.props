@@ -100,9 +100,23 @@
 			This would be for projects that end in .Test but are not unit test projects.
 		-->
 		<IsUnitTestProject Condition="'$(IsUnitTestProject)' == ''">true</IsUnitTestProject>
+		<IsPackable Condition="'$(IsPackable)' == ''">false</IsPackable>
 		<!-- Test methods don't need to end in Async even if they are async -->
 		<NoWarn>$(NoWarn);IDE1006</NoWarn>
 	</PropertyGroup>
 
+  <!-- This adds all default test project references -->
+	<ItemGroup Condition="'$(IsUnitTestProject)' == 'true'">
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNetTestSdkVersion)" />
+		<PackageReference Include="coverlet.collector" Version="$(CoverletCollectorVersion)">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      		<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="xunit" Version="$(XUnitVersion)" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitRunnerVisualStudioVersion)">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
 
 </Project>
