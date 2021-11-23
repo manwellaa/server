@@ -14,6 +14,7 @@ using Bit.Core.Settings;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Bit.Core.Models.Api;
+using Bit.Core.Models.Business.Tokens;
 
 namespace Bit.Core.Services
 {
@@ -31,6 +32,7 @@ namespace Bit.Core.Services
         private readonly GlobalSettings _globalSettings;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IOrganizationService _organizationService;
+        private readonly ITokenService<EmergencyAccessInviteToken> _tokenService;
 
         public EmergencyAccessService(
             IEmergencyAccessRepository emergencyAccessRepository,
@@ -44,7 +46,8 @@ namespace Bit.Core.Services
             IPasswordHasher<User> passwordHasher,
             IDataProtectionProvider dataProtectionProvider,
             GlobalSettings globalSettings,
-            IOrganizationService organizationService)
+            IOrganizationService organizationService,
+            ITokenService<EmergencyAccessInviteToken> tokenService)
         {
             _emergencyAccessRepository = emergencyAccessRepository;
             _organizationUserRepository = organizationUserRepository;
@@ -58,6 +61,7 @@ namespace Bit.Core.Services
             _dataProtector = dataProtectionProvider.CreateProtector("EmergencyAccessServiceDataProtector");
             _globalSettings = globalSettings;
             _organizationService = organizationService;
+            _tokenService = tokenService;
         }
 
         public async Task<EmergencyAccess> InviteAsync(User invitingUser, string email, EmergencyAccessType type, int waitTime)
@@ -120,8 +124,9 @@ namespace Bit.Core.Services
                 throw new BadRequestException("Emergency Access not valid.");
             }
 
-            if (!CoreHelpers.TokenIsValid("EmergencyAccessInvite", _dataProtector, token, user.Email, emergencyAccessId,
-                _globalSettings.OrganizationInviteExpirationHours))
+            var unProtectedToken = _tokenService.Unprotect(_dataProtector, token);
+            if (!unProtectedToken.IsValid(emergencyAccessId, user.Email,
+                    _globalSettings.OrganizationInviteExpirationHours))
             {
                 throw new BadRequestException("Invalid token.");
             }
@@ -401,8 +406,11 @@ namespace Bit.Core.Services
 
         private async Task SendInviteAsync(EmergencyAccess emergencyAccess, string invitingUsersName)
         {
-            var nowMillis = CoreHelpers.ToEpocMilliseconds(DateTime.UtcNow);
-            var token = _dataProtector.Protect($"EmergencyAccessInvite {emergencyAccess.Id} {emergencyAccess.Email} {nowMillis}");
+            var token = _tokenService.Protect(_dataProtector, new EmergencyAccessInviteToken
+            {
+                Id = emergencyAccess.Id,
+                Email = emergencyAccess.Email,
+            });
             await _mailService.SendEmergencyAccessInviteEmailAsync(emergencyAccess, invitingUsersName, token);
         }
 
